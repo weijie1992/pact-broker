@@ -11,7 +11,7 @@ env:
 jobs:
   consumer:
     runs-on: ubuntu-latest
-    services: # Add Pact Broker as a service container
+    services:
       pact-broker:
         image: pactfoundation/pact-broker
         ports:
@@ -20,11 +20,13 @@ jobs:
           PACT_BROKER_DATABASE_ADAPTER: sqlite
           PACT_BROKER_DATABASE_URL: sqlite:///pact_broker.sqlite
           PACT_BROKER_PUBLIC_HEARTBEAT: 'true'
+          PACT_BROKER_ALLOW_PUBLIC_READ: 'true'
         options: >-
-          --health-cmd "curl --fail http://localhost:9292/diagnostic/status/heartbeat || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
+          --health-cmd "wget -q -O - http://localhost:9292/diagnostic/status/heartbeat || exit 1"
+          --health-interval 30s
+          --health-timeout 10s
           --health-retries 5
+          --health-start-period 30s
 
     defaults:
       run:
