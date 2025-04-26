@@ -43,25 +43,15 @@ jobs:
         run: |
           echo "Waiting for Pact Broker to be ready..."
           for i in {1..30}; do
-            if nc -z localhost 9292; then
+            if curl --silent --head --connect-timeout 2 http://pact-broker:9292/diagnostic/status/heartbeat > /dev/null; then
               echo "Pact Broker is ready!"
-              break
+              exit 0
             fi
             echo "Waiting... ($i)"
             sleep 2
           done
-
-      - name: try curl instead
-        run: |
-          echo "Waiting for Pact Broker to be ready..."
-          for i in {1..30}; do
-            if curl --silent --head --connect-timeout 2 http://localhost:9292/diagnostic/status/heartbeat > /dev/null; then
-              echo "Pact Broker is ready!"
-              exit 0 # Exit script with success status
-            fi
-            echo "Waiting... ($i)"
-            sleep 2 # Wait before retrying
-          done
+          echo "Pact Broker did not become ready in time."
+          exit 1
 
       - name: Install dependencies
         run: npm ci
