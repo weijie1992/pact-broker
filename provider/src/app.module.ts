@@ -3,6 +3,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PactStateController } from './pact/pact-state.controller';
 import { User } from './user/user.entity';
 import { UserResolver } from './user/user.resolver';
 import { UserService } from './user/user.service';
@@ -28,5 +29,6 @@ import { UserService } from './user/user.service';
     }),
   ],
   providers: [UserResolver, UserService],
+  controllers: [PactStateController],
 })
 export class AppModule {}
