@@ -31,7 +31,7 @@ jobs:
 
       - name: Start Pact Broker
         run: |
-          docker run --network host -d -p \
+          docker run --network host -d \
             -e PACT_BROKER_DATABASE_ADAPTER=sqlite \
             -e PACT_BROKER_DATABASE_URL=sqlite::memory: \
             pactfoundation/pact-broker
