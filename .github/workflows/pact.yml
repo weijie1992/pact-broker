@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  PACT_BROKER_BASE_URL: http://localhost:9291
+  PACT_BROKER_BASE_URL: http://localhost:9292
   # PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }} # If auth enabled
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
 
       - name: Start Pact Broker
         run: |
-          docker run --network host -d -p 9291:9292 \
+          docker run --network host -d -p \
             -e PACT_BROKER_DATABASE_ADAPTER=sqlite \
             -e PACT_BROKER_DATABASE_URL=sqlite::memory: \
             pactfoundation/pact-broker
@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "Waiting for Pact Broker to be ready..."
           for i in {1..30}; do
-            if nc -z localhost 9291; then
+            if nc -z localhost 9292; then
               echo "Pact Broker is ready!"
               break
             fi
@@ -52,7 +52,7 @@ jobs:
         run: |
           echo "Waiting for Pact Broker to be ready..."
           for i in {1..30}; do
-            if curl --silent --head --connect-timeout 2 http://localhost:9291/diagnostic/status/heartbeat > /dev/null; then
+            if curl --silent --head --connect-timeout 2 http://localhost:9292/diagnostic/status/heartbeat > /dev/null; then
               echo "Pact Broker is ready!"
               exit 0 # Exit script with success status
             fi
