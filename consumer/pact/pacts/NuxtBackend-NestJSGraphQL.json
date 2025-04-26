@@ -1,0 +1,55 @@
+{
+  "consumer": {
+    "name": "NuxtBackend"
+  },
+  "interactions": [
+    {
+      "description": "A request to get user by ID",
+      "providerState": "A user with ID 1 exists",
+      "request": {
+        "body": {
+          "operationName": "GetUser",
+          "query": "query GetUser($userId: Float!) { user(id: $userId) { id name email } }",
+          "variables": {
+            "userId": 1
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "user": {
+              "email": "johndoe@example.com",
+              "id": 1,
+              "name": "John Doe"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "15.0.1"
+    },
+    "pactRust": {
+      "ffi": "0.4.22",
+      "models": "1.2.3"
+    },
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  },
+  "provider": {
+    "name": "NestJSGraphQL"
+  }
+}
