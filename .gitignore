@@ -2,3 +2,5 @@
 **/.output
 **/.nuxt
 **/.DS)_Store
+**/log
+*/dist

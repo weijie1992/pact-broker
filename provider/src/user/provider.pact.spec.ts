@@ -10,7 +10,7 @@ import { User } from './user.entity'; // Update with your entity path
 describe('Pact Provider Verification', () => {
   let app: INestApplication;
   let dataSource: DataSource;
-  const port = 3000; // Different from consumer's mock server
+  const port = 3003; // Different from consumer's mock server
 
   // 1. Setup NestJS server and database connection
   beforeAll(async () => {
@@ -51,7 +51,7 @@ describe('Pact Provider Verification', () => {
       pactUrls: [
         path.resolve(
           process.cwd(),
-          '../../frontend/pact/pacts/NuxtBackend-NestJSGraphQL.json',
+          '../consumer/pact/pacts/NuxtBackend-NestJSGraphQL.json',
         ),
       ],
       provider: 'NestJSGraphQL',
