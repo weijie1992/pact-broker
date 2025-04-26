@@ -21,7 +21,6 @@ jobs:
           PACT_BROKER_DATABASE_URL: sqlite:///pact_broker.sqlite
           PACT_BROKER_PUBLIC_HEARTBEAT: 'true'
           PACT_BROKER_ALLOW_PUBLIC_READ: 'true'
-
     defaults:
       run:
         working-directory: ./consumer
@@ -52,12 +51,12 @@ jobs:
             --consumer-app-version=$GITHUB_SHA \
             --branch=$GITHUB_REF_NAME
 
-      - name: Check if consumer can be deployed
-        run: |
-          pact-broker can-i-deploy \
-            --pacticipant=NuxtBackend \
-            --version=$GITHUB_SHA \
-            --to-environment=prod
+      # - name: Check if consumer can be deployed
+      #   run: |
+      #     pact-broker can-i-deploy \
+      #       --pacticipant=NuxtBackend \
+      #       --version=$GITHUB_SHA \
+      #       --to-environment=prod
 
   provider:
     runs-on: ubuntu-latest
@@ -86,15 +85,34 @@ jobs:
             --provider-base-url=http://localhost:3003 \
             --provider=NestJSGraphQL \
             --provider-app-version=$GITHUB_SHA \
+            --pact-broker-base-url=$PACT_BROKER_BASE_URL \
             --publish-verification-results
 
-      - name: Check if provider can be deployed
+      # - name: Check if provider can be deployed
+      #   run: |
+      #     pact-broker can-i-deploy \
+      #       --pacticipant=NestJSGraphQL \
+      #       --version=$GITHUB_SHA \
+      #       --to-environment=prod
+
+  # After both jobs, add a new deployment job:
+  deployment:
+    runs-on: ubuntu-latest
+    needs: [provider]
+    defaults:
+      run:
+        working-directory: ./consumer
+    steps:
+      - name: Install Ruby
+        run: sudo apt-get install ruby-full
+
+      - name: Install pact_broker-client
+        run: sudo gem install pact_broker-client
+
+      - name: Check if consumer can be deployed
         run: |
           pact-broker can-i-deploy \
-            --pacticipant=NestJSGraphQL \
+            --pacticipant=NuxtBackend \
             --version=$GITHUB_SHA \
-            --to-environment=prod
-
-      - name: Deploy to Prod
-        if: success()
-        run: ./echoSuccess.sh # Your deployment script
+            --to-environment=prod \
+            --broker-base-url=$PACT_BROKER_BASE_URL
