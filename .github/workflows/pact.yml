@@ -27,7 +27,7 @@ jobs:
         run: sudo apt-get install ruby-full
 
       - name: Install pact_broker-client
-        run: gem install pact_broker-client
+        run: sudo gem install pact_broker-client
 
       - name: Install dependencies
         run: npm ci
