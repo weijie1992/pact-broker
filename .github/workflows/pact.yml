@@ -76,7 +76,7 @@ jobs:
             --pact-broker-base-url=$PACT_BROKER_BASE_URL \
             --provider=NestJSGraphQL \
             --provider-app-version=$GITHUB_SHA \
-            --provider-states-setup-url=http://localhost:3003/pact-setup
+            --provider-states-setup-url=http://localhost:3003/pact-setup \
             --publish-verification-results
         working-directory: ./provider
 
