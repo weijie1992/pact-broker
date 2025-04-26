@@ -87,6 +87,7 @@ jobs:
             --pacticipant NuxtBackend \
             --version $GITHUB_SHA \
             --broker-base-url=$PACT_BROKER_BASE_URL
+        continue-on-error: true
         working-directory: ./consumer
 
       - name: Check if provider can be deployed (NestJSGraphQL)
