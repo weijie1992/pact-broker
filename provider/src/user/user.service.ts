@@ -17,8 +17,15 @@ export class UserService {
     // const res = Promise.resolve(this.userList.find((user) => user.id === id));
     // console.log('🚀 ~ UserService ~ findOne ~ res:', res);
     // return res;
-    return this.userRepository.findOne({
+    // return this.userRepository.findOne({
+    //   where: { id },
+    // });
+    const res = await this.userRepository.findOne({
       where: { id },
     });
+    if (res) return { ...res, id: 2 };
+    else {
+      return null;
+    }
   }
 }
