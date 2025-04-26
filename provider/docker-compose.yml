@@ -1,18 +1,37 @@
-version: '3'
-
 services:
-  database:
+  postgres: # <-- Renamed service to "postgres"
     image: postgres:latest
-    labels:
-      app: 'wins-wp'
     container_name: wins_dev_pg
     restart: always
     environment:
       - POSTGRES_USER=GRAPHQL
       - POSTGRES_PASSWORD=manager
-    logging:
-      options:
-        max-size: 10m
-        max-file: '3'
+      - POSTGRES_DB=pactbroker # <-- Explicit database name
     ports:
       - '127.0.0.1:7431:5432'
+    networks:
+      - pact-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U GRAPHQL -d pactbroker'] # <-- Fixed user/db
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pact-broker:
+    image: pactfoundation/pact-broker:latest
+    ports:
+      - '127.0.0.1:9291:9292'
+    environment:
+      PACT_BROKER_DATABASE_USERNAME: GRAPHQL
+      PACT_BROKER_DATABASE_PASSWORD: manager
+      PACT_BROKER_DATABASE_HOST: postgres # <-- Matches service name
+      PACT_BROKER_DATABASE_NAME: pactbroker # <-- Matches POSTGRES_DB
+    depends_on:
+      postgres: # <-- Now matches service name
+        condition: service_healthy
+    networks:
+      - pact-network
+
+networks:
+  pact-network:
+    driver: bridge
