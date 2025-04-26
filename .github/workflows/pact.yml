@@ -67,7 +67,7 @@ jobs:
         working-directory: ./provider
 
       - name: Install pact (provider verifier)
-        run: sudo gem install pact
+        run: sudo gem install pact-provider-verifier
 
       - name: Verify pacts
         run: |
