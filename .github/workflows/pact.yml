@@ -11,6 +11,18 @@ env:
 jobs:
   consumer:
     runs-on: ubuntu-latest
+    services: # Add Pact Broker as a service container
+      pact-broker:
+        image: pactfoundation/pact-broker
+        ports:
+          - 9292:9292
+        env:
+          PACT_BROKER_DATABASE_ADAPTER: sqlite
+          PACT_BROKER_DATABASE_URL: sqlite:///pact_broker.sqlite
+        options: >-
+          --health-cmd "curl --fail http://localhost:9292/diagnostic/status/heartbeat || exit 1"
+          --health-interval 2s
+
     defaults:
       run:
         working-directory: ./consumer
@@ -28,30 +40,6 @@ jobs:
 
       - name: Install pact_broker-client
         run: sudo gem install pact_broker-client
-
-      - name: Create Docker Network
-        run: docker network create pact-net
-
-      - name: Start Pact Broker
-        run: |
-          docker run --network pact-net --name pact-broker -d \
-            -e PACT_BROKER_DATABASE_ADAPTER=sqlite \
-            -e PACT_BROKER_DATABASE_URL=sqlite::memory: \
-            pactfoundation/pact-broker
-
-      - name: Wait for Pact Broker to be ready
-        run: |
-          echo "Waiting for Pact Broker to be ready..."
-          for i in {1..30}; do
-            if curl --silent --head --connect-timeout 2 http://pact-broker:9292/diagnostic/status/heartbeat > /dev/null; then
-              echo "Pact Broker is ready!"
-              exit 0
-            fi
-            echo "Waiting... ($i)"
-            sleep 2
-          done
-          echo "Pact Broker did not become ready in time."
-          exit 1
 
       - name: Install dependencies
         run: npm ci
