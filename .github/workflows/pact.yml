@@ -78,3 +78,19 @@ jobs:
             --provider-states-setup-url=http://localhost:3003/pact-setup \
             --publish-verification-results
         working-directory: ./provider
+
+      - name: Check if consumer can be deployed (NuxtBackend)
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant NuxtBackend \
+            --version $GITHUB_SHA \
+            --broker-base-url=$PACT_BROKER_BASE_URL
+        working-directory: ./consumer
+
+      - name: Check if provider can be deployed (NestJSGraphQL)
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant NestJSGraphQL \
+            --version $GITHUB_SHA \
+            --broker-base-url=$PACT_BROKER_BASE_URL
+        working-directory: ./provider
