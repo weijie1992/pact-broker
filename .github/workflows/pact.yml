@@ -29,9 +29,12 @@ jobs:
       - name: Install pact_broker-client
         run: sudo gem install pact_broker-client
 
+      - name: Create Docker Network
+        run: docker network create pact-net
+
       - name: Start Pact Broker
         run: |
-          docker run --network host -d \
+          docker run --network pact-net --name pact-broker -d \
             -e PACT_BROKER_DATABASE_ADAPTER=sqlite \
             -e PACT_BROKER_DATABASE_URL=sqlite::memory: \
             pactfoundation/pact-broker
