@@ -19,9 +19,12 @@ jobs:
         env:
           PACT_BROKER_DATABASE_ADAPTER: sqlite
           PACT_BROKER_DATABASE_URL: sqlite:///pact_broker.sqlite
+          PACT_BROKER_PUBLIC_HEARTBEAT: 'true'
         options: >-
           --health-cmd "curl --fail http://localhost:9292/diagnostic/status/heartbeat || exit 1"
-          --health-interval 2s
+          --health-interval 10s  # Give it more time to start up
+          --health-timeout 5s
+          --health-retries 5
 
     defaults:
       run:
