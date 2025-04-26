@@ -29,6 +29,13 @@ jobs:
       - name: Install pact_broker-client
         run: sudo gem install pact_broker-client
 
+      - name: Start Pact Broker
+        run: |
+          docker run -d -p 9291:9292 \
+            -e PACT_BROKER_DATABASE_ADAPTER=sqlite \
+            -e PACT_BROKER_DATABASE_URL=sqlite::memory: \
+            pactfoundation/pact-broker
+
       - name: Install dependencies
         run: npm ci
 
