@@ -11,6 +11,9 @@ env:
 jobs:
   consumer:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./consumer
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,6 +45,9 @@ jobs:
   provider:
     runs-on: ubuntu-latest
     needs: [consumer] # Wait for consumer job
+    defaults:
+      run:
+        working-directory: ./provider
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
