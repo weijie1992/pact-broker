@@ -48,6 +48,25 @@ jobs:
             sleep 2
           done
 
+      - name: try curl instead
+        run: |
+          echo "Waiting for Pact Broker to be ready..."
+          # Timeout after ~60 seconds (30 attempts * 2s sleep) plus curl connection timeouts
+          for i in {1..30}; do
+            # Use curl to attempt a connection and basic HTTP request (HEAD is lightweight)
+            # --silent (-s): Don't show progress meter or error messages (like connection refused)
+            # --head (-I): Fetch headers only (lighter than full GET)
+            # --connect-timeout 2: Max time in seconds for the connection phase
+            # > /dev/null: Discard the output (headers) sent to stdout
+            # curl exits with 0 if the connection and request handshake succeed, non-zero otherwise.
+            if curl --silent --head --connect-timeout 2 http://localhost:9291/diagnostic/status/heartbeat > /dev/null; then
+              echo "Pact Broker is ready!"
+              exit 0 # Exit script with success status
+            fi
+            echo "Waiting... ($i)"
+            sleep 2 # Wait before retrying
+          done
+
       - name: Install dependencies
         run: npm ci
 
