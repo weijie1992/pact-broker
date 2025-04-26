@@ -9,7 +9,6 @@ export class PactStateController {
 
   @Post('/pact-setup')
   async setupState(@Body() body: { state: string }) {
-    console.log('🚀 ~ PactStateController ~ setupState ~ body:', body);
     switch (body.state) {
       case 'A user with ID 1 exists':
         await this.dataSource.getRepository(User).delete({});

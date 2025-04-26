@@ -9,23 +9,9 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  // private userList = [
-  //   { id: '1', name: 'John Doe', email: 'johndoe@example.com' },
-  //   { id: '2', name: 'Jane Smith', email: 'janesmith@example.com' },
-  // ];
   async findOne(id: number): Promise<User | null> {
-    // const res = Promise.resolve(this.userList.find((user) => user.id === id));
-    // console.log('🚀 ~ UserService ~ findOne ~ res:', res);
-    // return res;
-    // return this.userRepository.findOne({
-    //   where: { id },
-    // });
-    const res = await this.userRepository.findOne({
+    return await this.userRepository.findOne({
       where: { id },
     });
-    if (res) return { ...res, id: 2 };
-    else {
-      return null;
-    }
   }
 }

@@ -35,7 +35,6 @@ describe('Pact Provider Verification', () => {
 
     app = moduleRef.createNestApplication();
     await app.listen(port);
-    console.log(`🚀 Server running on http://localhost:${port}`); // Add this line
   });
 
   // 2. Cleanup after tests

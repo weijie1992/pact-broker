@@ -8,9 +8,6 @@ export class UserResolver {
 
   @Query(() => User, { nullable: true })
   async user(@Args('id') id: number): Promise<User | null> {
-    console.log('🚀 ~ UserResolver ~ user ~ id:', id);
-    const res = await this.userService.findOne(id);
-    console.log('🚀 ~ UserResolver ~ user ~ res:', res);
-    return res;
+    return await this.userService.findOne(id);
   }
 }
