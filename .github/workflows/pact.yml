@@ -66,6 +66,9 @@ jobs:
         run: npm run start &
         working-directory: ./provider
 
+      - name: Install pact (provider verifier)
+        run: sudo gem install pact
+
       - name: Verify pacts
         run: |
           pact-provider-verifier \
