@@ -22,7 +22,7 @@ jobs:
           PACT_BROKER_PUBLIC_HEARTBEAT: 'true'
         options: >-
           --health-cmd "curl --fail http://localhost:9292/diagnostic/status/heartbeat || exit 1"
-          --health-interval 10s  # Give it more time to start up
+          --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
